@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StarterApp.Views.CreateItemPage"
+             Title="{Binding Title}">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto,Auto,Auto,Auto" Padding="16" RowSpacing="8">
+
+                <Label Grid.Row="0" Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}"
+                       TextColor="Red" />
+
+                <Entry Grid.Row="1" Placeholder="Item Title" Text="{Binding ItemTitle}" />
+                <Entry Grid.Row="2" Placeholder="Description" Text="{Binding Description}" />
+                <Entry Grid.Row="3" Placeholder="Category (e.g. Tools, Games)" Text="{Binding Category}" />
+                <Entry Grid.Row="4" Placeholder="Location" Text="{Binding Location}" />
+                <Entry Grid.Row="5" Placeholder="Daily Rate (£)" Text="{Binding DailyRate}" Keyboard="Numeric" />
+
+                <ActivityIndicator Grid.Row="6" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+                <Button Grid.Row="7" Text="List Item" Command="{Binding CreateItemCommand}"
+                        BackgroundColor="#512BD4" TextColor="White" />
+
+            </Grid>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

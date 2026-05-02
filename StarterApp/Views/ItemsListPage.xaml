@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StarterApp.Views.ItemsListPage"
+             Title="{Binding Title}">
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*,Auto" Padding="16">
+
+            <ActivityIndicator Grid.Row="0" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+
+            <Label Grid.Row="0" Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}"
+                   TextColor="Red" Margin="0,8" />
+
+            <CollectionView Grid.Row="1" ItemsSource="{Binding Items}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,8" Padding="12" BorderColor="LightGray">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <Label Grid.Row="0" Text="{Binding Title}"
+                                       FontSize="18" FontAttributes="Bold" />
+                                <Label Grid.Row="1" Text="{Binding Description}"
+                                       FontSize="14" TextColor="Gray" />
+                                <Label Grid.Row="2" Text="{Binding DailyRate, StringFormat='£{0:F2}/day'}"
+                                       FontSize="14" TextColor="Green" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Button Grid.Row="2" Text="List an Item" Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.NavigateToCreateCommand}"
+                    Margin="0,8" BackgroundColor="#512BD4" TextColor="White" />
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
