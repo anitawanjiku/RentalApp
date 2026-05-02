@@ -43,6 +43,12 @@ public partial class MainViewModel : BaseViewModel
     }
 
     [RelayCommand]
+    private async Task NavigateToRentalsAsync()
+    {
+        await Shell.Current.GoToAsync(nameof(RentalsPage));
+    }
+
+    [RelayCommand]
     private async Task LogoutAsync()
     {
         var result = await Application.Current.MainPage.DisplayAlert(

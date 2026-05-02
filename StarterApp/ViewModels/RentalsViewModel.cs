@@ -3,36 +3,27 @@ using CommunityToolkit.Mvvm.Input;
 using StarterApp.Database.Data.Repositories;
 using StarterApp.Database.Models;
 using System.Collections.ObjectModel;
-using StarterApp.Views;
 
 namespace StarterApp.ViewModels;
 
-public partial class ItemsListViewModel : BaseViewModel
+public partial class RentalsViewModel : BaseViewModel
 {
-    private readonly IItemRepository _itemRepository;
     private readonly IRentalRepository _rentalRepository;
+    private readonly IItemRepository _itemRepository;
 
-    [ObservableProperty]
-    private ObservableCollection<Item> items = new();
+    [ObservableProperty] private ObservableCollection<Rental> incomingRentals = new();
+    [ObservableProperty] private ObservableCollection<Rental> outgoingRentals = new();
+    [ObservableProperty] private int currentUserId = 1; // TODO: replace with logged-in user
 
-    [ObservableProperty]
-    private Item? selectedItem;
-
-    public ItemsListViewModel(IItemRepository itemRepository, IRentalRepository rentalRepository)
+    public RentalsViewModel(IRentalRepository rentalRepository, IItemRepository itemRepository)
     {
-        _itemRepository = itemRepository;
         _rentalRepository = rentalRepository;
-        Title = "Available Items";
+        _itemRepository = itemRepository;
+        Title = "Rentals";
     }
 
     [RelayCommand]
-    public async Task NavigateToCreateAsync()
-    {
-        await Shell.Current.GoToAsync(nameof(CreateItemPage));
-    }
-
-    [RelayCommand]
-    public async Task LoadItemsAsync()
+    public async Task LoadRentalsAsync()
     {
         if (IsBusy) return;
         IsBusy = true;
@@ -40,14 +31,18 @@ public partial class ItemsListViewModel : BaseViewModel
 
         try
         {
-            var result = await _itemRepository.GetAllAsync();
-            Items.Clear();
-            foreach (var item in result)
-                Items.Add(item);
+            var incoming = await _rentalRepository.GetIncomingAsync(CurrentUserId);
+            var outgoing = await _rentalRepository.GetOutgoingAsync(CurrentUserId);
+
+            IncomingRentals.Clear();
+            OutgoingRentals.Clear();
+
+            foreach (var r in incoming) IncomingRentals.Add(r);
+            foreach (var r in outgoing) OutgoingRentals.Add(r);
         }
         catch (Exception ex)
         {
-            SetError($"Failed to load items: {ex.Message}");
+            SetError($"Failed to load rentals: {ex.Message}");
         }
         finally
         {
@@ -70,7 +65,7 @@ public partial class ItemsListViewModel : BaseViewModel
             var rental = new Rental
             {
                 ItemId = itemId,
-                BorrowerId = 1,
+                BorrowerId = CurrentUserId,
                 StartDate = DateTime.UtcNow.AddDays(1),
                 EndDate = DateTime.UtcNow.AddDays(3),
                 TotalPrice = item.DailyRate * 2,
@@ -78,7 +73,7 @@ public partial class ItemsListViewModel : BaseViewModel
             };
 
             await _rentalRepository.CreateAsync(rental);
-            await Shell.Current.DisplayAlert("Success", "Rental requested!", "OK");
+            await LoadRentalsAsync();
         }
         catch (Exception ex)
         {
@@ -87,6 +82,20 @@ public partial class ItemsListViewModel : BaseViewModel
         finally
         {
             IsBusy = false;
+        }
+    }
+
+    [RelayCommand]
+    public async Task UpdateRentalStatusAsync(Rental rental)
+    {
+        try
+        {
+            await _rentalRepository.UpdateAsync(rental);
+            await LoadRentalsAsync();
+        }
+        catch (Exception ex)
+        {
+            SetError($"Failed to update rental: {ex.Message}");
         }
     }
 }

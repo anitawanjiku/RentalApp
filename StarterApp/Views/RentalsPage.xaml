@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="StarterApp.Views.RentalsPage"
+             Title="{Binding Title}">
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,Auto,*" Padding="16">
+
+            <ActivityIndicator Grid.Row="0" IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" />
+            <Label Grid.Row="0" Text="{Binding ErrorMessage}" IsVisible="{Binding HasError}" TextColor="Red" />
+
+            <Label Grid.Row="1" Text="My Rental Requests" FontSize="18" FontAttributes="Bold" Margin="0,8" />
+
+            <CollectionView Grid.Row="2" ItemsSource="{Binding OutgoingRentals}">
+                <CollectionView.EmptyView>
+                    <Label Text="No rental requests yet" HorizontalOptions="Center" TextColor="Gray" Margin="0,20" />
+                </CollectionView.EmptyView>
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="0,8" Padding="12" BorderColor="LightGray">
+                            <Grid RowDefinitions="Auto,Auto,Auto">
+                                <Label Grid.Row="0" Text="{Binding Item.Title}"
+                                       FontSize="16" FontAttributes="Bold" />
+                                <Label Grid.Row="1" Text="{Binding Status}"
+                                       FontSize="14" TextColor="Gray" />
+                                <Label Grid.Row="2" Text="{Binding TotalPrice, StringFormat='Total: £{0:F2}'}"
+                                       FontSize="14" TextColor="Green" />
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
