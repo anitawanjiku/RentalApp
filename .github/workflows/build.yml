@@ -1,0 +1,31 @@
+name: Build and Test
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+
+    - name: Restore dependencies
+      run: dotnet restore StarterApp.sln
+
+    - name: Build Database project
+      run: dotnet build StarterApp.Database/StarterApp.Database.csproj --no-restore
+
+    - name: Build Test project
+      run: dotnet build StarterApp.Test/StarterApp.Test.csproj --no-restore
+
+    - name: Run tests
+      run: dotnet test StarterApp.Test/StarterApp.Test.csproj --no-build --verbosity normal
