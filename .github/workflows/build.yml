@@ -19,7 +19,7 @@ jobs:
         dotnet-version: '9.0.x'
 
     - name: Restore dependencies
-      run: dotnet restore StarterApp.sln
+      run: dotnet restore StarterApp.Database/StarterApp.Database.csproj && dotnet restore StarterApp.Test/StarterApp.Test.csproj
 
     - name: Build Database project
       run: dotnet build StarterApp.Database/StarterApp.Database.csproj --no-restore
