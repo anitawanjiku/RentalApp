@@ -28,4 +28,5 @@ postgres_data/
 *.user
 *.userosscache
 *.sln.docstates
+**/appsettings.json
 
