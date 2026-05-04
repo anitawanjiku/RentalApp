@@ -16,6 +16,6 @@ public class Role
     public string Description { get; set; } = string.Empty;
     public bool IsDefault { get; set; } = false;
 
-    // Navigation property - fixed naming
+    // Navigation property
     public List<UserRole> UserRoles { get; set; } = new List<UserRole>();
 }
