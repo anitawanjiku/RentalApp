@@ -119,7 +119,8 @@ public class RentalRepositoryTests : IDisposable
     {
         // Arrange
         await SeedDataAsync();
-        var rental = new Rental { ItemId = 1, BorrowerId = 2, StartDate = DateTime.UtcNow, EndDate = DateTime.UtcNow.AddDays(2), TotalPrice = 10, Status = "Requested" };
+        var rental = new Rental { ItemId = 1, BorrowerId = 2, StartDate = DateTime.UtcNow, 
+                    EndDate = DateTime.UtcNow.AddDays(2), TotalPrice = 10, Status = "Requested" };
         _context.Rentals.Add(rental);
         await _context.SaveChangesAsync();
 
