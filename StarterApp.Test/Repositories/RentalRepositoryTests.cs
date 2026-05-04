@@ -6,11 +6,18 @@ using Xunit;
 
 namespace StarterApp.Test.Repositories;
 
+/// <summary>
+/// Unit tests for the RentalRepository class.
+/// Uses an in-memory database to test rental data access logic in isolation.
+/// </summary>
 public class RentalRepositoryTests : IDisposable
 {
     private readonly AppDbContext _context;
     private readonly RentalRepository _repository;
 
+    /// <summary>
+    /// Sets up a fresh in-memory database before each test.
+    /// </summary>
     public RentalRepositoryTests()
     {
         var options = new DbContextOptionsBuilder<AppDbContext>()
@@ -20,11 +27,17 @@ public class RentalRepositoryTests : IDisposable
         _repository = new RentalRepository(_context);
     }
 
+    /// <summary>
+    /// Cleans up the database context after each test.
+    /// </summary>
     public void Dispose()
     {
         _context.Dispose();
     }
 
+    /// <summary>
+    /// Seeds the database with test users and an item for use in tests.
+    /// </summary>
     private async Task SeedDataAsync()
     {
         _context.Users.AddRange(
@@ -35,6 +48,9 @@ public class RentalRepositoryTests : IDisposable
         await _context.SaveChangesAsync();
     }
 
+    /// <summary>
+    /// Verifies that CreateAsync saves a rental to the database with the correct status.
+    /// </summary>
     [Fact]
     public async Task CreateAsync_SavesRentalToDatabase()
     {
@@ -58,6 +74,9 @@ public class RentalRepositoryTests : IDisposable
         Assert.Equal("Requested", result.Status);
     }
 
+    /// <summary>
+    /// Verifies that GetOutgoingAsync returns only rentals made by the specified borrower.
+    /// </summary>
     [Fact]
     public async Task GetOutgoingAsync_ReturnsRentalsForBorrower()
     {
@@ -74,6 +93,9 @@ public class RentalRepositoryTests : IDisposable
         Assert.Equal(2, result[0].BorrowerId);
     }
 
+    /// <summary>
+    /// Verifies that GetIncomingAsync returns rentals for items owned by the specified user.
+    /// </summary>
     [Fact]
     public async Task GetIncomingAsync_ReturnsRentalsForOwner()
     {
@@ -89,6 +111,9 @@ public class RentalRepositoryTests : IDisposable
         Assert.Single(result);
     }
 
+    /// <summary>
+    /// Verifies that UpdateAsync correctly changes the status of an existing rental.
+    /// </summary>
     [Fact]
     public async Task UpdateAsync_ChangesRentalStatus()
     {
@@ -106,6 +131,9 @@ public class RentalRepositoryTests : IDisposable
         Assert.Equal("Approved", result.Status);
     }
 
+    /// <summary>
+    /// Verifies that GetByIdAsync returns null when no rental exists with the given ID.
+    /// </summary>
     [Fact]
     public async Task GetByIdAsync_ReturnsNull_WhenNotFound()
     {
